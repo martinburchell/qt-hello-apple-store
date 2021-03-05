@@ -2,6 +2,7 @@
 # Parts of Qt
 # =============================================================================
 
+QT += network  # required to #include <QtNetwork/...>
 QT += widgets  # required to #include <QApplication>
 
 # =============================================================================
@@ -10,6 +11,7 @@ QT += widgets  # required to #include <QApplication>
 
 CONFIG += mobility
 CONFIG += c++11
+CONFIG += static
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
@@ -41,12 +43,24 @@ TEMPLATE = app
 # Architecture
 # -----------------------------------------------------------------------------
 
-linux : {
-    CONFIG += static
-}
-
 
 ios: {
+    CONFIG(iphoneos, iphoneos|iphonesimulator) {
+        message("Building for iPhone OS")
+        contains(QT_ARCH, arm64) {
+            message("Building for iOS/ARM v8 64-bit architecture")
+            ARCH_TAG = "ios_armv8_64"
+        } else {
+            message("Building for iOS/ARM v7 (32-bit) architecture")
+            ARCH_TAG = "ios_armv7"
+        }
+    }
+
+    CONFIG(iphonesimulator, iphoneos|iphonesimulator) {
+        message("Building for iPhone Simulator")
+        ARCH_TAG = "ios_x86_64"
+    }
+
     disable_warning.name = "GCC_WARN_64_TO_32_BIT_CONVERSION"
     disable_warning.value = "No"
     QMAKE_MAC_XCODE_SETTINGS += disable_warning

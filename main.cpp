@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QDialog>
 #include <QLabel>
+#include <QtNetwork/QSslSocket>
 #include <QVBoxLayout>
 
 class HelloDialog : public QDialog
@@ -13,8 +14,26 @@ public:
         auto prompt = new QLabel("Hello Apple Store!");
         prompt->setWordWrap(true);
 
+        auto prompt2 = new QLabel(
+            QString("Supports SSL: %1").arg(QSslSocket::supportsSsl())
+        );
+        prompt2->setWordWrap(true);
+
+        auto prompt3 = new QLabel(
+            QString("Compile-time OpenSSL version: %1").arg(QSslSocket::sslLibraryBuildVersionString())
+        );
+        prompt3->setWordWrap(true);
+
+        auto prompt4 = new QLabel(
+            QString("Run-time OpenSSL version: %1").arg(QSslSocket::sslLibraryVersionString())
+        );
+        prompt4->setWordWrap(true);
+
         auto mainlayout = new QVBoxLayout();
         mainlayout->addWidget(prompt);
+        mainlayout->addWidget(prompt2);
+        mainlayout->addWidget(prompt3);
+        mainlayout->addWidget(prompt4);
         mainlayout->addStretch(1);
 
         setLayout(mainlayout);
